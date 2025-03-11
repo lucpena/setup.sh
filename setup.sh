@@ -16,6 +16,9 @@ install_apt_packages() {
     # Requirements for Anki
     sudo apt install -y libxcb-xinerama0 libxcb-cursor0 libnss3 zstd
 
+    # Misc
+    sudo apt install -y lm-sensors
+
     echo -e "\n----------------------------------------------------------\n"
 }
 
