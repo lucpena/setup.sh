@@ -5,4 +5,4 @@ git add .
 git commit -m "Updated via sync.sh"
 git push
 
-echo "Files synced with GitHub."
+echo -e "\n\nFiles synced with GitHub."
