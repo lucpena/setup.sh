@@ -16,8 +16,11 @@ install_apt_packages() {
     # Requirements for Anki
     sudo apt install -y libxcb-xinerama0 libxcb-cursor0 libnss3 zstd
 
-    # Misc
+    # Sensors
     sudo apt install -y lm-sensors
+
+    # Microsoft fonts and a a lot of stuff that I don't know what it is
+    sudo apt install -y ubuntu-restricted-extras
 
     echo -e "\n----------------------------------------------------------\n"
 }
