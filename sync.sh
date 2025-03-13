@@ -6,7 +6,12 @@ echo -e "\npull"
 git pull
 
 echo -e "\nadd"
-git add .
+if git add .; then
+    echo "OK"
+else
+    echo "FAIL"
+    exit 1
+fi
 
 echo -e "\ncommit"
 git commit -m "Updated via sync.sh"
