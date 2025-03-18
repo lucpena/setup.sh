@@ -11,7 +11,7 @@ install_apt_packages() {
     # Python3 and Python3-pip are the Python packages
 
     sudo apt update
-    sudo apt install -y cool-retro-term git steam-devices python3 python3-pip 
+    sudo apt install -y cool-retro-term git steam-devices python3 python3-pip ghostscript
 
     # Requirements for Anki
     sudo apt install -y libxcb-xinerama0 libxcb-cursor0 libnss3 zstd
