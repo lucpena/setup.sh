@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# Add repository
-echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
+    echo -e "\nInstalling Telegram..."
+    echo -e "----------------------------------------------------------\n"
 
-# Import GPG key
-curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
+    if ! command -v telegram-desktop &> /dev/null; then
+        wget -O telegram.tar.xz https://telegram.org/dl/desktop/linux
+        tar -xf telegram.tar.xz
+        sudo mv Telegram /opt/telegram
+        sudo ln -s /opt/telegram/Telegram /usr/bin/telegram-desktop
+        sudo ln -s /opt/telegram/Updater /usr/bin/telegram-updater
+        rm telegram.tar.xz
+    else
+        echo "Telegram is already installed."
+    fi
 
-# Update package lists
-sudo apt update
-
-# Install OneDriver
-sudo apt install -y onedriver
-
-echo "OneDriver installation complete."
+    echo -e "\n----------------------------------------------------------\n"

@@ -2,13 +2,15 @@
 
 # To make this script executable, run: chmod +x install.sh
 
+# Remember to download the icons and fonts folder from OneDrive
+
 add_apt_repos() {
 
     #OneDriver
     echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
     curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
 
-    # Update package lists
+    # Update package lists after new repositories are added
     sudo apt update
 }
 
@@ -35,6 +37,31 @@ install_apt_packages() {
     # OneDriver
     sudo apt install -y onedriver
 
+    # FCITX for Japanese input. This is what Linux Mint installs by default
+    sudo apt install -y \
+    fcitx-mozc fonts-ipafont-mincho fonts-takao-gothic fonts-takao-mincho ibus-mozc \
+    mozc-data mozc-server mozc-utils-gui fcitx fcitx-config-gtk \
+    fcitx-frontend-all fcitx-frontend-fbterm fcitx-frontend-gtk2 \
+    fcitx-frontend-gtk3 fcitx-frontend-qt5 fcitx-libs \
+    fcitx-module-dbus fcitx-module-kimpanel fcitx-module-lua \
+    fcitx-module-x11 fcitx-modules fcitx-tools fcitx-ui-classic \
+    gir1.2-fcitx-1.0 ibus ibus-clutter ibus-gtk ibus-gtk3 ibus-table
+
+    # Add FCITX to startup
+    echo -e "\nAdding Fcitx to startup..."
+    mkdir -p ~/.config/autostart
+    cat > ~/.config/autostart/fcitx.desktop <<EOL
+[Desktop Entry]
+Type=Application
+Exec=fcitx
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Fcitx
+Comment=Start Fcitx input method framework
+EOL
+    echo "Fcitx added to startup."
+
     echo -e "\n----------------------------------------------------------\n"
 }
 
@@ -43,7 +70,6 @@ install_flatpak_packages() {
     echo -e "----------------------------------------------------------\n"
 
     flatpak install flathub \
-        org.telegram.desktop \
         md.obsidian.Obsidian \
         com.bitwarden.desktop \
         org.videolan.VLC \
@@ -72,6 +98,24 @@ install_curl_packages() {
 
     echo -e "\n----------------------------------------------------------\n"
 
+}
+
+install_telegram() {
+    echo -e "\nInstalling Telegram..."
+    echo -e "----------------------------------------------------------\n"
+
+    if ! command -v telegram-desktop &> /dev/null; then
+        wget -O telegram.tar.xz https://telegram.org/dl/desktop/linux
+        tar -xf telegram.tar.xz
+        sudo mv Telegram /opt/telegram
+        sudo ln -s /opt/telegram/Telegram /usr/bin/telegram-desktop
+        sudo ln -s /opt/telegram/Updater /usr/bin/telegram-updater
+        rm telegram.tar.xz
+    else
+        echo "Telegram is already installed."
+    fi
+
+    echo -e "\n----------------------------------------------------------\n"
 }
 
 install_vscode() {
@@ -260,6 +304,34 @@ install_fonts() {
     echo -e "\n----------------------------------------------------------\n"
 }
 
+install_icons_and_cursor() {
+    echo -e "\nInstalling icons and cursors..."
+    echo -e "----------------------------------------------------------\n"
+
+    # Directory containing icons and cursors
+    ICONS_DIR="./icons"
+
+    # System-wide icons directory
+    SYSTEM_ICONS_DIR="/usr/share/icons"
+
+    # Check if the icons directory exists
+    if [ -d "$ICONS_DIR" ]; then
+        # Copy all contents of the icons directory to the system-wide icons directory
+        sudo cp -r "$ICONS_DIR"/* "$SYSTEM_ICONS_DIR"
+        echo "Icons and cursors installed."
+
+        # Refresh the icon cache
+        sudo gtk-update-icon-cache -f "$SYSTEM_ICONS_DIR"
+    else
+        echo "Icons directory not found."
+    fi
+
+    echo -e "\n----------------------------------------------------------\n"
+}
+install_icons_and_cursor() {
+
+}
+
 main() {
 
     echo -e "\nInstalling and configuring random bullshit...\n"
@@ -267,22 +339,34 @@ main() {
     # Create Downloads folder if it does not exist
     mkdir -p "$(dirname "$0")"/Downloads
 
+    # First Update
+    echo -e "\nUpdating the system...\n"
+    sudo apt update
+    sudo apt upgrade -y
+
     add_apt_repos
     install_apt_packages
     install_flatpak_packages
     install_curl_packages
+    install_telegram
     install_vscode
     install_github
     install_anki
     install_fonts
+    install_icons_and_cursor
 
     configure_cedilla
-    update_bashrc
     create_nemo_action
+    # update_bashrc
 
+    # Sensors detection
+    sudo sensors-detect --auto
+
+    echo -e "\n----------------------------------------------------------\n"
     echo -e "\nAll done! Now, remeber to:\n"
     echo -e "\t1. Configure your GitHub account by running 'gh auth login'."
-    echo -e "\t2. OneDriver: onedriver-launcher or onedriver /path/to/mount/onedrive/at/."
+    echo -e "\t2. OneDriver: onedriver-launcher, search OneDriver on the menu or onedriver /path/to/mount/onedrive/at/."
+    echo -e "\t3. Configure your Japanese input by running 'fcitx-config-gtk3' or Fcitx Configuration."
 
     echo -e "\t> Reboot your system to apply the changes. lol \n\n"
 }
