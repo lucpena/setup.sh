@@ -6,6 +6,8 @@
 
 add_apt_repos() {
 
+    sudo apt install -y curl wget flatpak
+
     #OneDriver
     echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
     curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
@@ -21,8 +23,9 @@ install_apt_packages() {
     # Steam Devices is a package that allows you to use the Steam Controller and other devices on Linux
     # Cool Retro Term is a terminal emulator that mimics the look of old cathode screens
     # Python3 and Python3-pip are the Python packages
+    # Ghostscript is a package that interprets PostScript and PDF page description languages
 
-    sudo apt update
+
     sudo apt install -y cool-retro-term git steam-devices python3 python3-pip ghostscript
 
     # Requirements for Anki
