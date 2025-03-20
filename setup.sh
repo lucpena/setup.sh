@@ -336,6 +336,12 @@ main() {
 
     echo -e "\nInstalling and configuring random bullshit...\n"
 
+    read -p "This script will install and configure various packages and settings. Do you want to proceed? (y/n): " confirm
+    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+        echo "Installation aborted."
+        exit 0
+    fi
+
     # Create Downloads folder if it does not exist
     mkdir -p "$(dirname "$0")"/Downloads
 
