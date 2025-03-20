@@ -2,6 +2,16 @@
 
 # To make this script executable, run: chmod +x install.sh
 
+add_apt_repos() {
+
+    #OneDriver
+    echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
+    curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
+
+    # Update package lists
+    sudo apt update
+}
+
 install_apt_packages() {
     echo -e "\nInstalling APT packages..."
     echo -e "----------------------------------------------------------\n"
@@ -21,6 +31,9 @@ install_apt_packages() {
 
     # Microsoft fonts and a a lot of stuff that I don't know what it is
     sudo apt install -y ubuntu-restricted-extras
+
+    # OneDriver
+    sudo apt install -y onedriver
 
     echo -e "\n----------------------------------------------------------\n"
 }
@@ -43,12 +56,14 @@ install_curl_packages() {
     echo -e "\nInstalling packages via curl..."
     echo -e "----------------------------------------------------------\n"
 
+    echo -e "\nInstalling Brave browser...\n"
     if ! command -v brave-browser &> /dev/null; then
         curl -fsS https://dl.brave.com/install.sh | sh 
     else
         echo "Brave browser is already installed."
     fi
 
+    echo -e "\nInstalling Ollama...\n"
     if ! command -v ollama &> /dev/null; then
         curl -fsSL https://ollama.com/install.sh | sh
     else
@@ -178,6 +193,9 @@ install_github() {
 
 install_anki() {
 
+    echo -e "\nInstalling Anki..."
+    echo -e "----------------------------------------------------------\n"
+
     if ! command -v anki &> /dev/null; then
         # Download Anki (replace the URL with the latest version if necessary)
         wget -P "$(dirname "$0")"/Downloads https://github.com/ankitects/anki/releases/download/25.02/anki-25.02-linux-qt6.tar.zst
@@ -196,6 +214,8 @@ install_anki() {
     else
         echo "Anki is already installed."
     fi  
+
+    echo -e "\n----------------------------------------------------------\n"
 
 }
 
@@ -240,15 +260,6 @@ install_fonts() {
     echo -e "\n----------------------------------------------------------\n"
 }
 
-config()  {
-    echo -e "\nConfiguring..."
-    echo -e "----------------------------------------------------------\n"
-
-    # Configurações do Git
-    echo -e "\n GitHub CLI \n O código de ativação estará NO TERMINAL!!\n"
-    gh auth login
-}
-
 main() {
 
     echo -e "\nInstalling and configuring random bullshit...\n"
@@ -256,6 +267,7 @@ main() {
     # Create Downloads folder if it does not exist
     mkdir -p "$(dirname "$0")"/Downloads
 
+    add_apt_repos
     install_apt_packages
     install_flatpak_packages
     install_curl_packages
@@ -267,6 +279,10 @@ main() {
     configure_cedilla
     update_bashrc
     create_nemo_action
+
+    echo -e "\nAll done! Now, remeber to:\n"
+    echo -e "\t1. Configure your GitHub account by running 'gh auth login'."
+    echo -e "\t2. OneDriver: onedriver-launcher or onedriver /path/to/mount/onedrive/at/."
 
     echo -e "\t> Reboot your system to apply the changes. lol \n\n"
 }
