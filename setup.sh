@@ -6,8 +6,6 @@
 
 add_apt_repos() {
 
-    sudo apt install -y curl wget flatpak
-
     #OneDriver
     echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
     curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
@@ -24,8 +22,6 @@ install_apt_packages() {
     # Cool Retro Term is a terminal emulator that mimics the look of old cathode screens
     # Python3 and Python3-pip are the Python packages
     # Ghostscript is a package that interprets PostScript and PDF page description languages
-
-
     sudo apt install -y cool-retro-term git steam-devices python3 python3-pip ghostscript
 
     # Requirements for Anki
@@ -65,6 +61,14 @@ Comment=Start Fcitx input method framework
 EOL
     echo "Fcitx added to startup."
 
+    # Add Japanese input to the system
+    echo -e "\nAdding Japanese input to the system..." 
+    im-config -n fcitx
+    echo "Japanese input added to the system."
+
+    # MANGOHUD UI
+    apt install -y goverlay
+
     echo -e "\n----------------------------------------------------------\n"
 }
 
@@ -72,11 +76,20 @@ install_flatpak_packages() {
     echo -e "\nInstalling Flatpak packages..."
     echo -e "----------------------------------------------------------\n"
 
-    flatpak install flathub \
+    flatpak install -y flathub \
         md.obsidian.Obsidian \
         com.bitwarden.desktop \
         org.videolan.VLC \
-        com.usebottles.bottles -y
+        com.usebottles.bottles \
+        com.valvesoftware.Steam \
+        com.github.tchx84.Flatseal
+
+    # Grant access permissions to Flatpak packages
+    
+
+    # Remove ugly ass cursor
+    flatpak --user override --filesystem=/home/$USER/.icons/:ro
+    flatpak --user override --filesystem=/usr/share/icons/:ro
 
     echo -e "\n----------------------------------------------------------\n"
 }
