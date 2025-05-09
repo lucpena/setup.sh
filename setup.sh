@@ -69,6 +69,10 @@ EOL
     # MANGOHUD UI
     apt install -y goverlay
 
+    # Dev stuff
+    # raylib
+    sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+
     echo -e "\n----------------------------------------------------------\n"
 }
 
@@ -344,9 +348,6 @@ install_icons_and_cursor() {
 
     echo -e "\n----------------------------------------------------------\n"
 }
-install_icons_and_cursor() {
-
-}
 
 main() {
 
@@ -378,7 +379,13 @@ main() {
     install_icons_and_cursor
 
     configure_cedilla
-    create_nemo_action
+    # Check if nemo is installed
+    if command -v nemo &> /dev/null; then
+        create_nemo_action
+    else
+        echo "\t --Nemo is not installed. Skipping Nemo action creation..."
+    fi
+
     # update_bashrc
 
     # Sensors detection
