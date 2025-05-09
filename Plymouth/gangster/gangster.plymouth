@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Arch Linux Gangster Edition
+Description=Arch Linux Gangster Edition
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/gangster
+ScriptFile=/usr/share/plymouth/themes/gangster/gangster.script
