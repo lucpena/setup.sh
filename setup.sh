@@ -86,6 +86,7 @@ install_flatpak_packages() {
         org.videolan.VLC \
         com.usebottles.bottles \
         com.valvesoftware.Steam \
+        org.freedesktop.Platform.VulkanLayer.MangoHud \
         com.github.tchx84.Flatseal
 
     # Grant access permissions to Flatpak packages
