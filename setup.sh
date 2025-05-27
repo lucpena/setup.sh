@@ -94,6 +94,7 @@ install_flatpak_packages() {
     # Remove ugly ass cursor
     flatpak --user override --filesystem=/home/$USER/.icons/:ro
     flatpak --user override --filesystem=/usr/share/icons/:ro
+    sudo flatpak override --filesystem=xdg-config/MangoHud:ro
 
     echo -e "\n----------------------------------------------------------\n"
 }
