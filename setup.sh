@@ -10,6 +10,9 @@ add_apt_repos() {
     echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
     curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
 
+    #GRUB Customizer
+    sudo add-apt-repository ppa:danielrichter2007/grub-customizer
+
     # Update package lists after new repositories are added
     sudo apt update
 }
@@ -35,6 +38,16 @@ install_apt_packages() {
 
     # OneDriver
     sudo apt install -y onedriver
+
+    # Games
+    apt install -y goverlay lutris
+
+    # Dev stuff
+    # raylib
+    sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+
+    # Stuff
+    sudo apt-get install grub-customizer yuview
 
     # FCITX for Japanese input. This is what Linux Mint installs by default
     sudo apt install -y \
@@ -65,13 +78,6 @@ EOL
     echo -e "\nAdding Japanese input to the system..." 
     im-config -n fcitx
     echo "Japanese input added to the system."
-
-    # MANGOHUD UI
-    apt install -y goverlay
-
-    # Dev stuff
-    # raylib
-    sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
 
     echo -e "\n----------------------------------------------------------\n"
 }
