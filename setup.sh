@@ -13,6 +13,9 @@ add_apt_repos() {
     #GRUB Customizer
     sudo add-apt-repository ppa:danielrichter2007/grub-customizer
 
+    # Vulkan
+    sudo add-apt-repository ppa:graphics-drivers/ppa
+
     # Update package lists after new repositories are added
     sudo apt update
 }
@@ -40,14 +43,17 @@ install_apt_packages() {
     sudo apt install -y onedriver
 
     # Games
-    apt install -y goverlay lutris
+    sudo dpkg --add-architecture i386
+    sudo apt update
+    sudo apt install -y goverlay lutris
+    sudo apt install -y libwine wine32
 
     # Dev stuff
     # raylib
-    sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+    sudo apt install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
 
     # Stuff
-    sudo apt-get install grub-customizer yuview
+    sudo apt install -y grub-customizer yuview
 
     # FCITX for Japanese input. This is what Linux Mint installs by default
     sudo apt install -y \
@@ -399,9 +405,13 @@ main() {
     # Sensors detection
     sudo sensors-detect --auto
 
+    # Drivers if on Ubuntu
+    sudo ubuntu-drivers install
+
     echo -e "\n----------------------------------------------------------\n"
     echo -e "\nAll done! Now, remeber to:\n"
-    echo -e "\t1. Configure your GitHub account by running 'gh auth login'."
+    echo -e "\t1. Configure your GitHub account by running 'gh auth login', and"
+    echo -e "\n\t git config --global user.email 'you@example.com' \n\t git config --global user.name 'Your Name'\n"
     echo -e "\t2. OneDriver: onedriver-launcher, search OneDriver on the menu or onedriver /path/to/mount/onedrive/at/."
     echo -e "\t3. Configure your Japanese input by running 'fcitx-config-gtk3' or Fcitx Configuration."
 
