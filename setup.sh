@@ -18,6 +18,7 @@ add_apt_repos() {
 
     # Update package lists after new repositories are added
     sudo apt update
+    pkcon update
 }
 
 install_apt_packages() {
@@ -45,6 +46,8 @@ install_apt_packages() {
     # Games
     sudo dpkg --add-architecture i386
     sudo apt update
+    pkcon update
+
     sudo apt install -y goverlay lutris
     sudo apt install -y libwine wine32
 
@@ -96,7 +99,6 @@ install_flatpak_packages() {
         md.obsidian.Obsidian \
         com.bitwarden.desktop \
         org.videolan.VLC \
-        com.usebottles.bottles \
         com.valvesoftware.Steam \
         org.freedesktop.Platform.VulkanLayer.MangoHud \
         com.github.tchx84.Flatseal
@@ -148,6 +150,8 @@ install_telegram() {
     else
         echo "Telegram is already installed."
     fi
+
+    telegram-desktop
 
     echo -e "\n----------------------------------------------------------\n"
 }
@@ -305,7 +309,8 @@ install_fonts() {
     FONT_DIR="./fonts"
 
     # System-wide fonts directory
-    SYSTEM_FONT_DIR="/usr/local/share/fonts"
+    sudo mkdir /usr/local/share/fonts/my-fonts
+    SYSTEM_FONT_DIR="/usr/local/share/fonts/my-fonts"
 
     # Check if the fonts directory exists
     if [ -d "$FONT_DIR" ]; then
