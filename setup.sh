@@ -83,6 +83,18 @@ Comment=Start Fcitx input method framework
 EOL
     echo "Fcitx added to startup."
 
+    if ! grep -q "### User " ~/.bashrc; then
+        echo '' >> ~/.bashrc
+        echo '### User ' >> ~/.bashrc
+    fi
+
+    # Activate FCITX on the apps
+    if ! grep -q "GTK_IM_MODULE=fcitx" ~/.bashrc; then
+        echo 'export GTK_IM_MODULE=fcitx' >> ~/.bashrc
+        echo 'export QT_IM_MODULE=fcitx' >> ~/.bashrc
+        echo 'export XMODIFIERS=@im=fcitx' >> ~/.bashrc
+    fi
+
     # Add Japanese input to the system
     echo -e "\nAdding Japanese input to the system..." 
     im-config -n fcitx
@@ -95,21 +107,25 @@ install_flatpak_packages() {
     echo -e "\nInstalling Flatpak packages..."
     echo -e "----------------------------------------------------------\n"
 
-    flatpak install -y flathub \
-        md.obsidian.Obsidian \
-        com.bitwarden.desktop \
-        org.videolan.VLC \
-        com.valvesoftware.Steam \
-        org.freedesktop.Platform.VulkanLayer.MangoHud \
-        com.github.tchx84.Flatseal
+    if command -v flatpak &> /dev/null; then
+        flatpak install -y flathub \
+            md.obsidian.Obsidian \
+            com.bitwarden.desktop \
+            org.videolan.VLC \
+            com.valvesoftware.Steam \
+            org.freedesktop.Platform.VulkanLayer.MangoHud \
+            com.github.tchx84.Flatseal
 
-    # Grant access permissions to Flatpak packages
-    
+        # Grant access permissions to Flatpak packages
+        
 
-    # Remove ugly ass cursor
-    flatpak --user override --filesystem=/home/$USER/.icons/:ro
-    flatpak --user override --filesystem=/usr/share/icons/:ro
-    sudo flatpak override --filesystem=xdg-config/MangoHud:ro
+        # Remove ugly ass cursor
+        flatpak --user override --filesystem=/home/$USER/.icons/:ro
+        flatpak --user override --filesystem=/usr/share/icons/:ro
+        sudo flatpak override --filesystem=xdg-config/MangoHud:ro
+    else
+        echo "Flatpak not found."
+    fi
 
     echo -e "\n----------------------------------------------------------\n"
 }
