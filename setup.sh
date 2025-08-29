@@ -83,16 +83,26 @@ Comment=Start Fcitx input method framework
 EOL
     echo "Fcitx added to startup."
 
+    # Activate FCITX on the apps
     if ! grep -q "### User " ~/.bashrc; then
         echo '' >> ~/.bashrc
         echo '### User ' >> ~/.bashrc
     fi
-
-    # Activate FCITX on the apps
     if ! grep -q "GTK_IM_MODULE=fcitx" ~/.bashrc; then
         echo 'export GTK_IM_MODULE=fcitx' >> ~/.bashrc
         echo 'export QT_IM_MODULE=fcitx' >> ~/.bashrc
         echo 'export XMODIFIERS=@im=fcitx' >> ~/.bashrc
+    fi
+    
+    # Activate FCITX on the apps
+    if ! grep -q "### User " ~/.profile; then
+        echo '' >> ~/.profile
+        echo '### User ' >> ~/.profile
+    fi
+    if ! grep -q "GTK_IM_MODULE=fcitx" ~/.profile; then
+        echo 'export GTK_IM_MODULE=fcitx' >> ~/.profile
+        echo 'export QT_IM_MODULE=fcitx' >> ~/.profile
+        echo 'export XMODIFIERS=@im=fcitx' >> ~/.profile
     fi
 
     # Add Japanese input to the system
@@ -215,7 +225,11 @@ update_bashrc() {
     echo -e "\nUpdating .bashrc...\n"
     echo -e "\n----------------------------------------------------------\n"
 
-    echo -e "\necho -e \"\\n\"\nexport PS1=\"\\n [\\w] \\n > \"" >> ~/.bashrc
+    if ! grep -q "GTK_IM_MODULE=fcitx" ~/.bashrc; then
+        echo "" >> ~/.bashrc
+        echo "echo -e \"\\n\"\nexport PS1=\"\\n [\\w] \\n > \"" >> ~/.bashrc
+    fi
+
     echo -e "\n----------------------------------------------------------\n"
 }
 
@@ -321,8 +335,8 @@ install_fonts() {
     echo -e "\nInstalling fonts..."
     echo -e "----------------------------------------------------------\n"
 
-   # Directory containing fonts
-    FONT_DIR="./fonts"
+    # Directory containing fonts
+    FONT_DIR="$SCRIPT_DIR/fonts"
 
     # System-wide fonts directory
     sudo mkdir /usr/local/share/fonts/my-fonts
@@ -397,10 +411,16 @@ main() {
     # Create Downloads folder if it does not exist
     mkdir -p "$(dirname "$0")"/Downloads
 
+   # Get the directory of the script
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
     # First Update
     echo -e "\nUpdating the system...\n"
     sudo apt update
+    pkcon update
     sudo apt upgrade -y
+
+    sudo ubuntu-drivers install
 
     add_apt_repos
     install_apt_packages
@@ -440,5 +460,3 @@ main() {
 }
 
 main
-
-# To add
